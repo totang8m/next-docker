@@ -1,0 +1,23 @@
+version: "3"
+services:
+  node: &app_base
+    image: node:16.14.0-alpine
+    tty: true
+    working_dir: /var/www
+    volumes:
+      - ./next:/var/www
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+    restart: always
+  next-dev:
+    <<: *app_base
+    ports:
+      - "80:3000"
+    command: yarn dev
+  dev-static:
+    image: httpd
+    volumes:
+      - ./next/out:/usr/local/apache2/htdocs/
+    ports:
+      - "8080:80"
